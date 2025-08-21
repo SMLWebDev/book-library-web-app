@@ -18,12 +18,12 @@
                 </div>
 
                 <slot name="actions" :book="book">
-                    <button
+                    <Button
                         @click="$emit('add-to-library', book)"
                         class="bg-primary-500 text-white px-3 py-1 rounded text-sm hover:bg-primary-600 transition-colors"
                     >
                         Add to Library
-                    </button>
+                    </Button>
                 </slot>
             </div>
         </div>
@@ -32,6 +32,8 @@
 
 <script setup lang="ts">
 import type { Book } from '@/types/book'
+
+import { Button } from 'primevue'
 
 defineProps<{
     book: Book

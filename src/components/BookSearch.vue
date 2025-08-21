@@ -20,10 +20,10 @@
 
     <div v-if="searchResults.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       <BookCard
-        v-for="book in searchResults"
-        :key="book.id"
-        :book="book"
-        @add-to-library="handleAddToLibrary"
+        v-for="googleBook in searchResults"
+        :key="googleBook.id"
+        :book="googleBookToBook(googleBook)"
+        @add-to-library="(book) => handleAddToLibrary(googleBook)"
       />
     </div>
 
