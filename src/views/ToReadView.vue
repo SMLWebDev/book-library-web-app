@@ -3,7 +3,7 @@
     <div class="flex justify-between items-center mb-6">
       <h1 class="text-2xl font-bold text-gray-900">Books to Read</h1>
       <div class="text-sm text-gray-500">
-        {{ toReadBooks.length }} books in your reading list
+        {{ toReadBooks.length }} book(s) in your reading list
       </div>
     </div>
 
@@ -27,14 +27,17 @@
         :key="userBook.id"
         :book="transformUserBookToBook(userBook)"
       >
-        <template #actions="{ book }">
+        <template #actions>
+          <div class="flex">
+            <Button label="Remove" icon="pi pi-trash" variant="text" size="small" />
+          </div>
           <div class="flex flex-col gap-2">
             <div class="text-xs text-gray-500">
               Added {{ formatDate(userBook.dateAdded) }}
             </div>
             <select
               :value="userBook.status"
-              @change="updateStatus(userBook.id, $event.target.value)"
+              @change="updateStatus(userBook.id, ($event.target as HTMLSelectElement).value as BookStatus)"
               class="text-xs border rounded px-2 py-1"
             >
               <option value="to_read">To Read</option>
@@ -54,6 +57,8 @@ import { storeToRefs } from 'pinia'
 import BookCard from '@/components/BookCard.vue'
 import { useBookStore } from '@/stores/books'
 import type { UserBook, Book } from '@/types/book'
+
+import { Button } from 'primevue'
 
 const bookStore = useBookStore()
 
@@ -79,9 +84,11 @@ function formatDate(dateString?: string) {
   return new Date(dateString).toLocaleDateString()
 }
 
-async function updateStatus(userBookId: string, newStatus: string) {
+type BookStatus = UserBook['status']
+
+async function updateStatus(userBookId: string, newStatus: BookStatus) {
   try {
-    await bookStore.updateBookStatus(userBookId, newStatus as any)
+    await bookStore.updateBookStatus(userBookId, newStatus)
   } catch (error) {
     console.error('Failed to update book status:', error)
   }

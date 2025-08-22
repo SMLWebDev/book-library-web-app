@@ -23,7 +23,7 @@
         v-for="googleBook in searchResults"
         :key="googleBook.id"
         :book="googleBookToBook(googleBook)"
-        @add-to-library="(book) => handleAddToLibrary(googleBook)"
+        @add-to-library="(book) => handleAddToLibrary(book)"
       />
     </div>
 
@@ -80,9 +80,8 @@ function googleBookToBook(googleBook: GoogleBook): Book {
   }
 }
 
-async function handleAddToLibrary(googleBook: GoogleBook) {
+async function handleAddToLibrary(book: Book) {
   try {
-    const book = googleBookToBook(googleBook)
     await bookStore.addBookToLibrary(book, 'to_read')
     // You might want to show a success message here
   } catch (error) {

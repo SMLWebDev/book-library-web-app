@@ -1,11 +1,25 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import type { User } from '@supabase/supabase-js'
 import { supabase } from '@/services/supabase'
 
 export const useAuthStore = defineStore('auth', () => {
   const user = ref<User | null>(null)
   const loading = ref(false)
+  const initialized = ref(false)
+
+  const isAuthenticated = computed(() => !!user.value)
+
+  async function initialize() {
+    try {
+      const { data: { user: currentUser } } = await supabase.auth.getUser()
+      user.value = currentUser
+    } catch (error) {
+      console.error('Error initializing auth:', error)
+    } finally {
+      initialized.value = true
+    }
+  }
 
   async function signUp(email: string, password: string) {
     try {
@@ -61,6 +75,9 @@ export const useAuthStore = defineStore('auth', () => {
   return {
     user,
     loading,
+    initialized,
+    isAuthenticated,
+    initialize,
     signUp,
     signIn,
     signOut
